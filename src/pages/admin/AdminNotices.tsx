@@ -44,7 +44,7 @@ export default function AdminNotices() {
     if (isAdding) {
       updatedNotices = [formData as Notice, ...content.notices];
     } else {
-      updatedNotices = content.notices.map(n => n.id === editingId ? formData as Notice : n);
+      updatedNotices = content.notices?.map(n => n.id === editingId ? formData as Notice : n) || [];
     }
     
     const result = await updateContent({ notices: updatedNotices });
@@ -139,7 +139,7 @@ export default function AdminNotices() {
             </tr>
           </thead>
           <tbody>
-            {content.notices.map(notice => (
+            {content.notices?.map(notice => (
               <tr key={notice.id} className="border-b last:border-0 border-gray-100 hover:bg-gray-50">
                 <td className="px-6 py-4 font-medium text-gray-800">{notice.title}</td>
                 <td className="px-6 py-4 text-gray-600 text-sm">{notice.date}</td>

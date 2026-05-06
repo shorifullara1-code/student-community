@@ -44,7 +44,7 @@ export default function AdminLeaders() {
     if (isAdding) {
       updated = [...content.leaders, formData as Leader];
     } else {
-      updated = content.leaders.map(n => n.id === editingId ? formData as Leader : n);
+      updated = content.leaders?.map(n => n.id === editingId ? formData as Leader : n) || [];
     }
     
     const result = await updateContent({ leaders: updated });
@@ -130,7 +130,7 @@ export default function AdminLeaders() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {content.leaders.map(leader => (
+        {content.leaders?.map(leader => (
           <div key={leader.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
             <div className="bg-gray-50 h-48 border-b border-gray-200 flex items-center justify-center overflow-hidden">
                 {leader.image ? (

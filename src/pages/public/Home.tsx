@@ -38,7 +38,7 @@ export default function Home() {
           </div>
           
           <div className="flex flex-col">
-            {content.notices.map((notice) => (
+            {content.notices?.map((notice) => (
               <a key={notice.id} href="#" className="flex items-center justify-between p-4 border-b last:border-b-0 border-dashed border-gray-300 hover:bg-gray-50 transition group">
                 <div className="flex items-start gap-3 w-full">
                   <div className="mt-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 group-hover:bg-[#ee2d24] transition-colors"></div>
@@ -110,8 +110,8 @@ export default function Home() {
               সর্বশেষ খবর
             </div>
             <div className="border border-t-0 border-gray-200 p-3 bg-white flex flex-col gap-3 rounded-b">
-              {content.latestNews.map((news, idx) => (
-                <a key={idx} href="#" className={`flex gap-2 items-start text-[15px] text-gray-700 hover:text-blue-700 ${idx !== content.latestNews.length - 1 ? 'border-b border-dotted border-gray-300 pb-3' : ''}`}>
+              {content.latestNews?.map((news, idx) => (
+                <a key={idx} href="#" className={`flex gap-2 items-start text-[15px] text-gray-700 hover:text-blue-700 ${idx !== (content.latestNews?.length || 0) - 1 ? 'border-b border-dotted border-gray-300 pb-3' : ''}`}>
                   <CheckCircle size={16} className="text-blue-600 shrink-0 mt-0.5" />
                   <span>{news}</span>
                 </a>
@@ -176,7 +176,7 @@ export default function Home() {
       {/* Sidebar */}
       <div className="md:col-span-4 flex flex-col gap-4">
         
-        {content.leaders.map((leader) => (
+        {content.leaders?.map((leader) => (
           <div key={leader.id} className="border border-gray-200 rounded overflow-hidden shadow-sm bg-white">
             <div className="bg-[#2563eb] text-white font-bold p-2 text-center text-sm shadow-sm z-10 relative">
               {leader.role}

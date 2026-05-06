@@ -7,9 +7,9 @@ export default function AdminDashboard() {
   const { content } = useAppContext();
 
   const stats = [
-    { title: 'মোট নোটিশ', value: content.notices.length, icon: <FileText size={24} className="text-blue-500" />, bg: 'bg-blue-50' },
-    { title: 'কমিটি সদস্য', value: content.leaders.length, icon: <Users size={24} className="text-blue-500" />, bg: 'bg-blue-50' },
-    { title: 'সর্বশেষ খবর', value: content.latestNews.length, icon: <CheckCircle size={24} className="text-purple-500" />, bg: 'bg-purple-50' },
+    { title: 'মোট নোটিশ', value: content.notices?.length || 0, icon: <FileText size={24} className="text-blue-500" />, bg: 'bg-blue-50' },
+    { title: 'কমিটি সদস্য', value: content.leaders?.length || 0, icon: <Users size={24} className="text-blue-500" />, bg: 'bg-blue-50' },
+    { title: 'সর্বশেষ খবর', value: content.latestNews?.length || 0, icon: <CheckCircle size={24} className="text-purple-500" />, bg: 'bg-purple-50' },
     { title: 'পেন্ডিং রিকোয়েস্ট', value: '০', icon: <Clock size={24} className="text-orange-500" />, bg: 'bg-orange-50' },
   ];
 
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
             <Link to="/admin/notices" className="text-blue-600 text-sm font-medium hover:underline">সব দেখুন</Link>
           </div>
           <div className="space-y-4">
-            {content.notices.slice(0, 3).map(notice => (
+            {content.notices?.slice(0, 3).map(notice => (
               <div key={notice.id} className="flex justify-between items-center border-b border-gray-100 pb-3 last:border-0 last:pb-0">
                 <div>
                   <p className="font-medium text-gray-800 text-sm">{notice.title}</p>

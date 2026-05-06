@@ -79,8 +79,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         .eq('id', 1)
         .single();
       
-      if (data?.data) {
-        setContent(data.data as SiteContent);
+      if (data?.data && Object.keys(data.data).length > 0) {
+        setContent({ ...defaultContent, ...(data.data as Partial<SiteContent>) });
       } else if (error && error.code !== 'PGRST116') {
         console.error("Error fetching content from Supabase:", error);
       }
