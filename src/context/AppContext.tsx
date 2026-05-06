@@ -110,6 +110,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           errorMsg = "Vercel-এ VITE_SUPABASE_ANON_KEY ঠিকমতো সেট করা নেই অথবা ভুল আছে। দয়া করে Project settings থেকে ঠিক করুন।";
         } else if (error.code === 'PGRST116' || error.message.includes('relation "public.settings" does not exist')) {
           errorMsg = "Supabase Database-এ 'settings' table তৈরি করা হয়নি। দয়া করে SQL Editor এ গিয়ে টেবিল তৈরি করুন।";
+        } else if (error.message.includes('row-level security policy') || error.code === '42501') {
+          errorMsg = "Supabase Error: Row-Level Security (RLS) ব্লক করেছে। অনুগ্রহ করে Supabase SQL Editor-এ গিয়ে 'ALTER TABLE settings DISABLE ROW LEVEL SECURITY;' রান করুন।";
         }
         
         // Revert optimistic update
