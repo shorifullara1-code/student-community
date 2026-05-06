@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --font-bangla: "Hind Siliguri", sans-serif;
+  --font-tiro: "Tiro Bangla", serif;
+}
+
+body {
+  font-family: var(--font-bangla);
+  background-color: #e5e5e5;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S10 15.5 10 10zM0 50c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S0 55.5 0 50zm90 0c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S90 55.5 90 50zM50 90c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S50 95.5 50 90zM50 10c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S50 15.5 50 10z' fill='%23d4d4d4' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-text {
+  display: inline-block;
+  padding-left: 100%;
+  animation: ticker 15s linear infinite;
+}
+.ticker-text:hover {
+  animation-play-state: paused;
+}
