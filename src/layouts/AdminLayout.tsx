@@ -42,11 +42,11 @@ export default function AdminLayout() {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full border border-gray-200">
           <div className="flex justify-center mb-6">
-            <div className="bg-blue-600 text-white p-4 rounded-full shadow-md">
+            <div className="bg-gradient-to-r from-blue-700 to-blue-500 text-white p-4 rounded-full shadow-lg">
               <Shield size={40} />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">এডমিন লগইন</h2>
+          <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-2 tracking-tight font-tiro">এডমিন লগইন</h2>
           <p className="text-center text-gray-500 mb-8">নিরাপদ প্যানেলে অ্যাক্সেস করুন</p>
           
           {error && (
@@ -74,7 +74,12 @@ export default function AdminLayout() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড</label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="block text-sm font-medium text-gray-700">পাসওয়ার্ড</label>
+                <a href="#" onClick={(e) => { e.preventDefault(); alert('পাসওয়ার্ড রিসেট করার জন্য সিস্টেম এডমিনের সাথে যোগাযোগ করুন।'); }} className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+                  পাসওয়ার্ড ভুলে গেছেন?
+                </a>
+              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock size={18} className="text-gray-400" />
