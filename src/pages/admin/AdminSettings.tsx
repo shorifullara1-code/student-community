@@ -12,16 +12,25 @@ export default function AdminSettings() {
     newsText: content.newsText
   });
   const [saved, setSaved] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     setSaved(false);
+    setErrorMsg(null);
   };
 
-  const handleSave = () => {
-    updateContent(formData);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    setErrorMsg(null);
+    setSaved(false);
+    const result = await updateContent(formData);
+    
+    if (result.success) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } else {
+      setErrorMsg(result.message || 'Unknown error occurred while saving.');
+    }
   };
 
   return (
@@ -35,6 +44,12 @@ export default function AdminSettings() {
           <Save size={18} /> সেভ করুন
         </button>
       </div>
+
+      {errorMsg && (
+        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {errorMsg}
+        </div>
+      )}
 
       {saved && (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">

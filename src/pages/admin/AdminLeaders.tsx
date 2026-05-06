@@ -8,28 +8,37 @@ export default function AdminLeaders() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Leader>>({});
   const [isAdding, setIsAdding] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleEdit = (leader: Leader) => {
     setEditingId(leader.id);
     setFormData(leader);
     setIsAdding(false);
+    setErrorMsg(null);
   };
 
   const handleAdd = () => {
     setIsAdding(true);
     setEditingId(null);
     setFormData({ id: Date.now().toString(), name: '', role: '', title: '', image: '' });
+    setErrorMsg(null);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('আপনি কি এই সদস্যকে মুছে ফেলতে চান?')) {
       const updated = content.leaders.filter(n => n.id !== id);
-      updateContent({ leaders: updated });
+      const result = await updateContent({ leaders: updated });
+      if (!result.success) {
+         setErrorMsg(result.message || 'Error deleting leader');
+      } else {
+         setErrorMsg(null);
+      }
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.name) return;
+    setErrorMsg(null);
     
     let updated;
     if (isAdding) {
@@ -38,10 +47,15 @@ export default function AdminLeaders() {
       updated = content.leaders.map(n => n.id === editingId ? formData as Leader : n);
     }
     
-    updateContent({ leaders: updated });
-    setEditingId(null);
-    setIsAdding(false);
-    setFormData({});
+    const result = await updateContent({ leaders: updated });
+    
+    if (result.success) {
+      setEditingId(null);
+      setIsAdding(false);
+      setFormData({});
+    } else {
+      setErrorMsg(result.message || 'Unknown error occurred while saving.');
+    }
   };
 
   return (
@@ -55,6 +69,15 @@ export default function AdminLeaders() {
           <Plus size={18} /> নতুন সদস্য যোগ করুন
         </button>
       </div>
+
+      {errorMsg && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 flex justify-between items-center">
+          <p>{errorMsg}</p>
+          <button onClick={() => setErrorMsg(null)} className="text-red-500 hover:text-red-700">
+            <X size={18} />
+          </button>
+        </div>
+      )}
 
       {(isAdding || editingId) && (
         <div className="bg-white rounded-xl shadow-sm border border-blue-200 p-6 mb-6">

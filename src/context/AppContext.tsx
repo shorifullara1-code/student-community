@@ -56,7 +56,7 @@ const defaultContent: SiteContent = {
 
 interface AppContextType {
   content: SiteContent;
-  updateContent: (newContent: Partial<SiteContent>) => Promise<void>;
+  updateContent: (newContent: Partial<SiteContent>) => Promise<{success: boolean, message?: string}>;
   isLoading: boolean;
 }
 
@@ -91,7 +91,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const updateContent = async (newContent: Partial<SiteContent>) => {
+  const updateContent = async (newContent: Partial<SiteContent>): Promise<{success: boolean, message?: string}> => {
     const updatedContent = { ...content, ...newContent };
     
     // Optimistic UI update
@@ -104,17 +104,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
       if (error) {
         console.error("Error saving content to Supabase:", error);
+        
+        let errorMsg = "Supabase Error: " + error.message;
         if (error.message.includes('Invalid API key')) {
-          console.error("SUPABASE API KEY ERROR: Please check your Vercel Environment Variables.");
-          alert("Vercel-এ VITE_SUPABASE_ANON_KEY ঠিকমতো সেট করা নেই অথবা ভুল আছে। দয়া করে ঠিক করুন।");
+          errorMsg = "Vercel-এ VITE_SUPABASE_ANON_KEY ঠিকমতো সেট করা নেই অথবা ভুল আছে। দয়া করে Project settings থেকে ঠিক করুন।";
         } else if (error.code === 'PGRST116' || error.message.includes('relation "public.settings" does not exist')) {
-          alert("Supabase Database-এ 'settings' table তৈরি করা হয়নি। দয়া করে SUPABASE_SETUP.md ফাইলের নির্দেশনা মেনে SQL রান করুন।");
-        } else {
-          alert("Supabase Error: " + error.message);
+          errorMsg = "Supabase Database-এ 'settings' table তৈরি করা হয়নি। দয়া করে SQL Editor এ গিয়ে টেবিল তৈরি করুন।";
         }
+        
+        // Revert optimistic update
+        setContent(content);
+        return { success: false, message: errorMsg };
       }
-    } catch (err) {
+      return { success: true };
+    } catch (err: any) {
       console.error("Supabase upsert failed", err);
+      // Revert optimistic update
+      setContent(content);
+      return { success: false, message: "Network error or Supabase connection failed." };
     }
   };
 

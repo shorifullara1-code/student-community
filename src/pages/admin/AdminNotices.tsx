@@ -8,28 +8,37 @@ export default function AdminNotices() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Notice>>({});
   const [isAdding, setIsAdding] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleEdit = (notice: Notice) => {
     setEditingId(notice.id);
     setFormData(notice);
     setIsAdding(false);
+    setErrorMsg(null);
   };
 
   const handleAdd = () => {
     setIsAdding(true);
     setEditingId(null);
     setFormData({ id: Date.now().toString(), title: '', date: new Date().toLocaleDateString('bn-BD'), isNew: true, type: 'সাধারণ' });
+    setErrorMsg(null);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('আপনি কি এই নোটিশটি মুছে ফেলতে চান?')) {
       const updated = content.notices.filter(n => n.id !== id);
-      updateContent({ notices: updated });
+      const result = await updateContent({ notices: updated });
+      if (!result.success) {
+         setErrorMsg(result.message || 'Error deleting notice');
+      } else {
+         setErrorMsg(null);
+      }
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.title) return;
+    setErrorMsg(null);
     
     let updatedNotices;
     if (isAdding) {
@@ -38,10 +47,15 @@ export default function AdminNotices() {
       updatedNotices = content.notices.map(n => n.id === editingId ? formData as Notice : n);
     }
     
-    updateContent({ notices: updatedNotices });
-    setEditingId(null);
-    setIsAdding(false);
-    setFormData({});
+    const result = await updateContent({ notices: updatedNotices });
+    
+    if (result.success) {
+      setEditingId(null);
+      setIsAdding(false);
+      setFormData({});
+    } else {
+      setErrorMsg(result.message || 'Unknown error occurred while saving.');
+    }
   };
 
   return (
@@ -55,6 +69,15 @@ export default function AdminNotices() {
           <Plus size={18} /> নতুন নোটিশ যোগ করুন
         </button>
       </div>
+
+      {errorMsg && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6 flex justify-between items-center">
+          <p>{errorMsg}</p>
+          <button onClick={() => setErrorMsg(null)} className="text-red-500 hover:text-red-700">
+            <X size={18} />
+          </button>
+        </div>
+      )}
 
       {(isAdding || editingId) && (
         <div className="bg-white rounded-xl shadow-sm border border-blue-200 p-6 mb-6">
