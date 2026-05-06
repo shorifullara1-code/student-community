@@ -116,7 +116,7 @@ export default function PublicLayout() {
                 </div>
               </div>
               <div className="text-white drop-shadow-md">
-                <h1 className="text-2xl md:text-4xl font-bold font-tiro tracking-wide mb-1 leading-tight">{content.siteTitle}</h1>
+                <h1 className="text-2xl md:text-4xl font-bold font-tiro tracking-wide mb-1 leading-tight">Savar Student Community</h1>
                 <p className="text-sm md:text-xl opacity-90">{content.siteSubtitle}</p>
               </div>
             </div>
