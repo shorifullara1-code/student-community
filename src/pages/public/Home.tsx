@@ -40,20 +40,20 @@ export default function Home() {
           <div className="flex flex-col">
             {content.notices.map((notice) => (
               <a key={notice.id} href="#" className="flex items-center justify-between p-4 border-b last:border-b-0 border-dashed border-gray-300 hover:bg-gray-50 transition group">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 group-hover:bg-[#ee2d24] transition-colors"></div>
-                  <div>
-                    <p className="text-gray-800 group-hover:text-[#1d4ed8] font-medium transition cursor-pointer text-[15px]">
+                <div className="flex items-start gap-3 w-full">
+                  <div className="mt-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 group-hover:bg-[#ee2d24] transition-colors"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-gray-800 group-hover:text-[#1d4ed8] font-medium transition cursor-pointer text-sm md:text-[15px] leading-snug">
                       {notice.title}
                     </p>
-                    <div className="flex gap-2 items-center mt-2 text-sm text-gray-500">
-                      <Calendar size={14} /> {notice.date} 
-                      {notice.isNew && <span className="bg-[#ee2d24] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">নতুন</span>}
-                      {notice.type && <span className="bg-[#f0ece1] text-gray-700 text-[10px] px-2 py-0.5 rounded-full font-bold">{notice.type}</span>}
+                    <div className="flex flex-wrap gap-2 items-center mt-2 text-xs md:text-sm text-gray-500">
+                      <span className="flex items-center gap-1 shrink-0"><Calendar size={14} /> {notice.date}</span>
+                      {notice.isNew && <span className="bg-[#ee2d24] text-white text-[10px] px-2 py-0.5 rounded-full font-bold shrink-0">নতুন</span>}
+                      {notice.type && <span className="bg-[#f0ece1] text-gray-700 text-[10px] px-2 py-0.5 rounded-full font-bold shrink-0">{notice.type}</span>}
                     </div>
                   </div>
                 </div>
-                <ChevronRight size={18} className="text-gray-400 shrink-0 group-hover:text-[#1d4ed8] transition-colors" />
+                <ChevronRight size={18} className="text-gray-400 shrink-0 group-hover:text-[#1d4ed8] transition-colors hidden sm:block ml-2" />
               </a>
             ))}
           </div>
@@ -128,10 +128,10 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-gray-800 font-tiro">ফটো গ্যালারি</h2>
             </div>
           </div>
-          <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 1" className="w-full h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer" />
-            <img src="https://images.unsplash.com/photo-1526976663112-00a1c50b25ba?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 2" className="w-full h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer" />
-            <img src="https://images.unsplash.com/photo-1511632765486-a01c80cb41add?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 3" className="w-full h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer hidden sm:block" />
+          <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 1" className="w-full h-24 sm:h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer" />
+            <img src="https://images.unsplash.com/photo-1526976663112-00a1c50b25ba?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 2" className="w-full h-24 sm:h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer" />
+            <img src="https://images.unsplash.com/photo-1511632765486-a01c80cb41add?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 3" className="w-full h-24 sm:h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer hidden sm:block" />
           </div>
           <div className="flex justify-center p-3 bg-gray-50 border-t border-gray-100">
              <Link to="/gallery" className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition">
@@ -141,12 +141,12 @@ export default function Home() {
         </div>
 
         {/* Call to Action Banner */}
-        <div className="bg-gradient-to-r from-blue-700 to-[#2563eb] rounded-lg p-6 shadow-sm text-white flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+        <div className="bg-gradient-to-r from-blue-700 to-[#2563eb] rounded-lg p-5 sm:p-6 shadow-sm text-white flex flex-col sm:flex-row items-center justify-between gap-5 mt-2 text-center sm:text-left">
           <div>
             <h3 className="text-xl font-bold mb-2 font-tiro">কমিউনিটির সাথে যুক্ত হোন!</h3>
             <p className="text-sm opacity-90 max-w-md">আমাদের স্বেচ্ছাসেবক দলে যোগ দিয়ে সমাজের উন্নয়নে অবদান রাখুন। নতুন সদস্য নিবন্ধনের ফর্ম সংগ্রহ করতে যোগাযোগ করুন।</p>
           </div>
-          <button className="bg-white text-blue-700 px-6 py-2.5 rounded shadow whitespace-nowrap font-bold hover:bg-gray-100 transition">
+          <button className="bg-white text-blue-700 px-6 py-2.5 rounded shadow whitespace-nowrap font-bold hover:bg-gray-100 transition w-full sm:w-auto">
             নিবন্ধন করুন
           </button>
         </div>

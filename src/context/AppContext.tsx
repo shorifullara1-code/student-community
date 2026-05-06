@@ -104,7 +104,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
       if (error) {
         console.error("Error saving content to Supabase:", error);
-        alert("Supabase Error: " + error.message + "\n\nMake sure you have created the 'settings' table in your Supabase database.");
+        if (error.message.includes('Invalid API key')) {
+          console.error("SUPABASE API KEY ERROR: Please check your Vercel Environment Variables.");
+          alert("Vercel-এ VITE_SUPABASE_ANON_KEY ঠিকমতো সেট করা নেই অথবা ভুল আছে। দয়া করে ঠিক করুন।");
+        } else if (error.code === 'PGRST116' || error.message.includes('relation "public.settings" does not exist')) {
+          alert("Supabase Database-এ 'settings' table তৈরি করা হয়নি। দয়া করে SUPABASE_SETUP.md ফাইলের নির্দেশনা মেনে SQL রান করুন।");
+        } else {
+          alert("Supabase Error: " + error.message);
+        }
       }
     } catch (err) {
       console.error("Supabase upsert failed", err);
