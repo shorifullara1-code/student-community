@@ -55,7 +55,7 @@ export default function PublicLayout() {
         <div 
           className="h-[200px] bg-cover bg-center relative shrink-0"
           style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2000')" 
+            backgroundImage: `url('${content.heroImage || "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2000"}')` 
           }}
         >
           <div className="absolute inset-0 bg-black/50"></div>
@@ -80,6 +80,9 @@ export default function PublicLayout() {
           <div className="flex flex-nowrap shrink-0">
             <Link to="/" className={`px-4 py-3 flex items-center transition shrink-0 ${isActive('/')}`}>
               <Home size={20} />
+            </Link>
+            <Link to="/news" className={`px-3 md:px-4 py-3 flex items-center gap-1 transition shrink-0 ${isActive('/news')}`}>
+              খবর
             </Link>
             <Link to="/about" className={`px-3 md:px-4 py-3 flex items-center gap-1 transition shrink-0 ${isActive('/about')}`}>
               আমাদের সম্পর্কিত <ChevronDown size={14} className="opacity-50 hidden md:block"/>

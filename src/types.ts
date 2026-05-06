@@ -14,6 +14,15 @@ export interface Leader {
   image: string;
 }
 
+export interface NewsArticle {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+  author?: string;
+  image?: string;
+}
+
 export interface SiteContent {
   siteTitle: string;
   siteSubtitle: string;
@@ -24,4 +33,6 @@ export interface SiteContent {
   newsText: string;
   latestNews: string[];
   leaders: Leader[];
+  newsArticles?: NewsArticle[];
+  heroImage?: string;
 }

@@ -105,17 +105,33 @@ export default function Home() {
 
         {/* Latest News Items */}
         <div className="mt-2">
-          <div className="shadow-sm">
-            <div className="bg-[#1d4ed8] text-white px-3 py-2 font-bold flex items-center gap-2">
-              সর্বশেষ খবর
+          <div className="shadow-sm border border-gray-200 rounded">
+            <div className="bg-[#1d4ed8] text-white px-3 py-2 font-bold flex justify-between items-center">
+              <span className="flex items-center gap-2">সর্বশেষ খবর</span>
+              <Link to="/news" className="text-xs hover:underline flex items-center gap-1 font-normal bg-white/20 px-2 py-0.5 rounded">
+                 সব খবর <ChevronRight size={12} />
+              </Link>
             </div>
-            <div className="border border-t-0 border-gray-200 p-3 bg-white flex flex-col gap-3 rounded-b">
-              {content.latestNews?.map((news, idx) => (
-                <a key={idx} href="#" className={`flex gap-2 items-start text-[15px] text-gray-700 hover:text-blue-700 ${idx !== (content.latestNews?.length || 0) - 1 ? 'border-b border-dotted border-gray-300 pb-3' : ''}`}>
-                  <CheckCircle size={16} className="text-blue-600 shrink-0 mt-0.5" />
-                  <span>{news}</span>
-                </a>
-              ))}
+            <div className="p-3 bg-white flex flex-col gap-3 rounded-b">
+              {content.newsArticles && content.newsArticles.length > 0 ? (
+                content.newsArticles.slice(0, 3).map((news, idx) => (
+                  <Link to="/news" key={news.id} className={`flex gap-3 items-start text-[15px] group ${idx !== Math.min((content.newsArticles?.length || 0), 3) - 1 ? 'border-b border-dotted border-gray-300 pb-3' : ''}`}>
+                     {news.image ? (
+                        <div className="w-16 h-12 shrink-0 rounded overflow-hidden mt-0.5">
+                           <img src={news.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                        </div>
+                     ) : (
+                        <CheckCircle size={16} className="text-blue-600 shrink-0 mt-1" />
+                     )}
+                    <div className="flex-1">
+                       <span className="text-gray-800 font-medium group-hover:text-blue-700 transition-colors line-clamp-2 leading-snug">{news.title}</span>
+                       <span className="text-xs text-gray-500 mt-1 block flex items-center gap-1"><Calendar size={10} /> {news.date}</span>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                 <div className="text-center py-4 text-gray-500 text-sm">কোনো সর্বশেষ খবর নেই</div>
+              )}
             </div>
           </div>
         </div>
@@ -176,24 +192,15 @@ export default function Home() {
       {/* Sidebar */}
       <div className="md:col-span-4 flex flex-col gap-4">
         
-        {content.leaders?.map((leader) => (
-          <div key={leader.id} className="border border-gray-200 rounded overflow-hidden shadow-sm bg-white">
-            <div className="bg-[#2563eb] text-white font-bold p-2 text-center text-sm shadow-sm z-10 relative">
-              {leader.role}
-            </div>
-            <div className="bg-[#f0f0f0]">
-              <img 
-                src={leader.image} 
-                alt={leader.role} 
-                className="w-full aspect-square object-cover"
-              />
-            </div>
-            <div className="p-3 text-center bg-white border-t-4 border-[#1e40af]">
-              <h3 className="font-bold text-gray-800 text-lg">{leader.name}</h3>
-              <p className="text-sm text-gray-600 font-medium">{leader.title}</p>
-            </div>
+        {/* Test Section */}
+        <div className="border border-gray-200 rounded overflow-hidden shadow-sm bg-white mt-2">
+          <div className="bg-[#2563eb] text-white font-bold p-2 text-center text-sm shadow-sm z-10 relative">
+            টেস্ট
           </div>
-        ))}
+          <div className="p-4 text-center bg-gray-50 border-t-4 border-[#1e40af]">
+            <h3 className="font-bold text-gray-800">test programing this site</h3>
+          </div>
+        </div>
 
         {/* Important Links */}
         <div className="border border-gray-200 rounded shadow-sm bg-white mt-2 overflow-hidden">

@@ -9,7 +9,8 @@ export default function AdminSettings() {
     siteSubtitle: content.siteSubtitle,
     logoText: content.logoText,
     aboutText: content.aboutText,
-    newsText: content.newsText
+    newsText: content.newsText,
+    heroImage: content.heroImage || ''
   });
   const [saved, setSaved] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -97,7 +98,25 @@ export default function AdminSettings() {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">চলমান খবর (Ticker Text)</label>
+            <label className="block text-sm font-semibold text-gray-700">হিরো সেকশনের ছবির লিংক (Hero Image URL)</label>
+            <input 
+              type="text" 
+              name="heroImage"
+              value={formData.heroImage} 
+              onChange={handleChange}
+              placeholder="https://images.unsplash.com/..."
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            />
+            {formData.heroImage && (
+              <div className="mt-2 text-sm text-gray-500">
+                <img src={formData.heroImage} alt="Hero Preview" className="h-32 object-cover rounded border border-gray-200 mt-2" />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700">স্ক্রলিং টেক্সট (Scrolling News Text)</label>
+
             <input 
               type="text" 
               name="newsText"

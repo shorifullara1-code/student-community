@@ -34,6 +34,7 @@ export default function AdminLayout() {
     { name: 'ড্যাশবোর্ড', path: '/admin', icon: <LayoutDashboard size={20} /> },
     { name: 'ওয়েবসাইটের তথ্য', path: '/admin/settings', icon: <Settings size={20} /> },
     { name: 'নোটিশ বোর্ড', path: '/admin/notices', icon: <FileText size={20} /> },
+    { name: 'খবর', path: '/admin/news', icon: <Globe size={20} /> },
     { name: 'নেতৃবৃন্দ', path: '/admin/leaders', icon: <Users size={20} /> },
   ];
 

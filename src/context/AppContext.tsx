@@ -51,7 +51,9 @@ const defaultContent: SiteContent = {
       title: 'সাধারণ সম্পাদক, সাভার স্টুডেন্ট কমিউনিটি',
       image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=300&h=300'
     }
-  ]
+  ],
+  newsArticles: [],
+  heroImage: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
 };
 
 interface AppContextType {

@@ -11,12 +11,14 @@ import AdminLayout from './layouts/AdminLayout';
 // Public Pages
 import Home from './pages/public/Home';
 import GenericPage from './pages/public/GenericPage';
+import News from './pages/public/News';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminNotices from './pages/admin/AdminNotices';
 import AdminLeaders from './pages/admin/AdminLeaders';
+import AdminNews from './pages/admin/AdminNews';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -27,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<PublicLayout />}>
             <Route index element={<Home />} />
             <Route path="about" element={<GenericPage title="আমাদের সম্পর্কিত" contentKey="aboutText" />} />
+            <Route path="news" element={<News />} />
             <Route path="committees" element={<GenericPage title="কমিটি সমূহ" />} />
             <Route path="projects" element={<GenericPage title="প্রকল্পসমূহ" />} />
             <Route path="contact" element={<GenericPage title="যোগাযোগ" />} />
@@ -39,6 +42,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="settings" element={<AdminSettings />} />
             <Route path="notices" element={<AdminNotices />} />
             <Route path="leaders" element={<AdminLeaders />} />
+            <Route path="news" element={<AdminNews />} />
           </Route>
         </Routes>
       </BrowserRouter>
