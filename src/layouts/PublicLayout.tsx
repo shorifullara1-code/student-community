@@ -1,11 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Search, Globe, Home, ChevronDown, ArrowUp, User } from 'lucide-react';
+import { Search, Globe, Home, ChevronDown, ArrowUp, User, Users } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
+import { supabase } from '../lib/supabase';
 
 export default function PublicLayout() {
   const { content } = useAppContext();
   const location = useLocation();
+  const [visitorCount, setVisitorCount] = useState<number>(0);
+
+  useEffect(() => {
+    const trackVisitor = async () => {
+      // Fetch current count from Supabase
+      const { data } = await supabase
+        .from('settings')
+        .select('data')
+        .eq('id', 2)
+        .single();
+        
+      let currentCount = data?.data?.count || 0;
+
+      // Increment if it's a new session
+      if (!sessionStorage.getItem('session_counted')) {
+        currentCount += 1;
+        sessionStorage.setItem('session_counted', 'true');
+        
+        // Save back to Supabase
+        await supabase
+          .from('settings')
+          .upsert({ id: 2, data: { count: currentCount } });
+      }
+
+      setVisitorCount(currentCount);
+    };
+
+    trackVisitor();
+
+    // Listen to real-time updates if supported by the table
+    const channel = supabase
+      .channel('public:settings:id=2')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'settings', filter: 'id=eq.2' },
+        (payload) => {
+          if (payload.new && payload.new.data && payload.new.data.count) {
+            setVisitorCount(payload.new.data.count);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const isActive = (path: string) => {
     return location.pathname === path ? 'bg-[#1d4ed8]' : 'hover:bg-[#1d4ed8]';
@@ -129,9 +177,22 @@ export default function PublicLayout() {
         </div>
         
         {/* Footer */}
-        <footer className="bg-gray-800 text-white p-6 mt-auto shrink-0">
-          <div className="text-center text-sm text-gray-400">
+        <footer className="bg-gray-800 text-white p-6 mt-auto shrink-0 flex flex-col items-center">
+          <div className="mb-4 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 flex items-center gap-3">
+             <div className="bg-blue-600/20 text-blue-400 p-1.5 rounded">
+                <Users size={18} />
+             </div>
+             <div>
+                <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">মোট ভিজিটর</div>
+                <div className="text-xl font-bold font-mono tracking-widest text-[#fcda05]">{visitorCount.toLocaleString('bn-BD')}</div>
+             </div>
+          </div>
+          
+          <div className="text-center text-sm text-gray-400 mb-2">
             &copy; {new Date().getFullYear()} {content.siteTitle}. সর্বস্বত্ব সংরক্ষিত। | <Link to="/admin" className="text-blue-500 hover:underline">এডমিন প্যানেল</Link>
+          </div>
+          <div className="text-center text-sm text-gray-400">
+            Developed, designed and maintenanced By <a href="https://www.facebook.com/Shorifulhacker" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300 hover:underline">Shoriful Islam</a>
           </div>
         </footer>
       </div>
