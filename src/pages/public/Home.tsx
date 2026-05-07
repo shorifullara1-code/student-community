@@ -235,14 +235,52 @@ export default function Home() {
           </div>
           <div className="p-4 bg-gray-50 flex flex-col items-center justify-center">
              <div className="w-16 h-16 bg-white rounded-full shadow-sm border border-gray-200 mb-2 overflow-hidden flex items-center justify-center text-blue-600 font-bold text-2xl font-tiro p-2 relative">
-                <div className="absolute inset-2 border border-red-500 rounded-full"></div>
-                S
+                {content.logoUrl ? (
+                  <img src={content.logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" />
+                ) : (
+                  <>
+                    <div className="absolute inset-2 border border-red-500 rounded-full"></div>
+                    <span className="font-tiro">{content.logoText}</span>
+                  </>
+                )}
              </div>
              <p className="font-bold text-gray-800 text-sm">সাভার স্টুডেন্ট কমিউনিটি</p>
-             <p className="text-xs text-gray-500 mb-3">5.2K likes</p>
-             <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-1.5 rounded text-sm font-medium w-full flex justify-center items-center gap-2 transition">
+             <p className="text-xs text-gray-500 mb-3">10K likes</p>
+             <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-1.5 rounded text-sm font-medium w-full flex justify-center items-center gap-2 transition">
                Like Page
-             </button>
+             </a>
+          </div>
+        </div>
+
+        {/* Adomyo 24 Facebook Page Plugin */}
+        <div className="border border-gray-200 rounded shadow-sm bg-white mt-2 overflow-hidden">
+           <div className="bg-[#1877F2] text-white font-bold p-3 text-sm shadow-sm z-10 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                </svg>
+               Adomyo 24 Page
+            </div>
+          </div>
+          <div className="p-4 bg-gray-50 flex flex-col items-center justify-center">
+             <a href="https://www.facebook.com/adomyo24" target="_blank" rel="noopener noreferrer" className="bg-[#1877F2] hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium w-full flex justify-center items-center gap-2 transition">
+               Visit Adomyo 24 Page
+             </a>
+          </div>
+        </div>
+
+        {/* Savar Student Community Group */}
+        <div className="border border-gray-200 rounded shadow-sm bg-white mt-2 overflow-hidden">
+           <div className="bg-[#1877F2] text-white font-bold p-3 text-sm shadow-sm z-10 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+               <Users size={16} />
+               Savar Student Community Group
+            </div>
+          </div>
+          <div className="p-4 bg-gray-50 flex flex-col items-center justify-center">
+             <a href="https://www.facebook.com/groups/1953756172210944" target="_blank" rel="noopener noreferrer" className="bg-[#1877F2] hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium w-full flex justify-center items-center gap-2 transition">
+               Join Facebook Group
+             </a>
           </div>
         </div>
 
