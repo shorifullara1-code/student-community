@@ -151,6 +151,9 @@ export default function PublicLayout() {
             <Link to="/gallery" className={`px-3 md:px-4 py-3 flex items-center gap-1 transition shrink-0 ${isActive('/gallery')}`}>
               গ্যালারি <ChevronDown size={14} className="opacity-50 hidden md:block"/>
             </Link>
+            <Link to="/register" className={`px-3 md:px-4 py-3 flex items-center gap-1 transition shrink-0 ${isActive('/register')}`}>
+              রেজিস্ট্রেশন <ChevronDown size={14} className="opacity-50 hidden md:block"/>
+            </Link>
           </div>
           <div className="flex shrink-0 sticky right-0">
             <button className="px-4 py-3 bg-[#3b82f6] hover:bg-[#1d4ed8] flex items-center gap-1 font-bold shadow-[-4px_0_10px_rgba(37,99,235,0.5)] md:shadow-none">
