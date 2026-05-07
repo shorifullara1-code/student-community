@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, ChevronRight, Calendar, CheckCircle, Info, HeartHandshake, BookOpen, Users, Link as LinkIcon, Camera } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
 
 export default function Home() {
   const { content } = useAppContext();
+  const [recentPhotos, setRecentPhotos] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const { data } = await supabase
+          .from('gallery_photos')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(3);
+        if (data) {
+          setRecentPhotos(data);
+        }
+      } catch (err) {
+        console.error("Error fetching photos", err);
+      }
+    };
+    fetchPhotos();
+  }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 relative">
@@ -145,9 +165,17 @@ export default function Home() {
             </div>
           </div>
           <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 1" className="w-full h-24 sm:h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer" />
-            <img src="https://images.unsplash.com/photo-1526976663112-00a1c50b25ba?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 2" className="w-full h-24 sm:h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer" />
-            <img src="https://images.unsplash.com/photo-1511632765486-a01c80cb41add?auto=format&fit=crop&q=80&w=400&h=300" alt="Gallery 3" className="w-full h-24 sm:h-32 object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer hidden sm:block" />
+            {recentPhotos.length > 0 ? (
+              recentPhotos.map((photo, idx) => (
+                <Link to="/gallery" key={photo.id} className={`w-full h-24 sm:h-32 block ${idx === 2 ? 'hidden sm:block' : ''}`}>
+                  <img src={photo.url} alt={photo.title || "Gallery"} className="w-full h-full object-cover rounded shadow-sm hover:opacity-90 transition cursor-pointer bg-gray-100" />
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-2 sm:col-span-3 text-center py-6 text-gray-400 text-sm">
+                গ্যালারিতে এখনো কোনো ছবি যোগ করা হয়নি।
+              </div>
+            )}
           </div>
           <div className="flex justify-center p-3 bg-gray-50 border-t border-gray-100">
              <Link to="/gallery" className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition">
