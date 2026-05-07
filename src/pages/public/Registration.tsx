@@ -18,17 +18,26 @@ export default function Registration() {
     {
       category: 'Savar & Ashulia Colleges',
       list: [
-        'Savar Government College',
+        'সাভার সরকারি কলেজ (Savar Government College)',
         'Savar College — EIIN 108453',
-        'Savar Model College — EIIN 108451',
+        'সাভার মডেল কলেজ (Savar Model College)',
         'Al Haj Abdul Mannan Degree College — EIIN 108449',
         'College Of Finance & Management — EIIN 131047',
         'Savar Cantonment Public School & College',
+        'Savar cantonment board boys high school',
         'Jahangirnagar University School & College',
         'Savar Laboratory College',
         'Savar City College',
-        'Legend College Savar',
-        'Savar Trust College'
+        'সাভার লিজেন্ড কলেজ (Legend College Savar)',
+        'Savar Trust College',
+        'ধামরাই সরকারী কলেজ',
+        'Savar Adharchandra Government High school',
+        'Ashulia School And College',
+        'BPATC Collage',
+        'Sena public school and college',
+        'Palashbari Hazi Joynuddin school & college',
+        'Savar girls high school',
+        'সাভার সেন্টাল মডেল কলেজ'
       ]
     },
     {
@@ -36,13 +45,20 @@ export default function Registration() {
       list: [
         'Jahangirnagar University',
         'Gono Bishwabidyalay',
-        'City University',
+        'সিটি ইউনিভার্সিটি (City University)',
         'Eastern University',
         'Manarat International University',
         'Daffodil International University',
         'Asian University of Bangladesh',
         'Army Institute of Business Administration',
         'BRAC University Residential Campus'
+      ]
+    },
+    {
+      category: 'Madrasah & Other',
+      list: [
+        'arabic univarsity of jamia siddiqia',
+        'মাদ্রাসা স্টুডেন্ট'
       ]
     }
   ];
