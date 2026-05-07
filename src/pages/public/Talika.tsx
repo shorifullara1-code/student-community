@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Building, Droplet, MapPin, AlertCircle, BarChart2, PieChart as PieChartIcon, TrendingUp } from 'lucide-react';
+import { Users, Building, Droplet, MapPin, AlertCircle, BarChart2, PieChart as PieChartIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { motion } from 'framer-motion';
 
 interface RegistrationData {
@@ -72,21 +72,6 @@ export default function Talika() {
     name: institution,
     count: groupedData[institution].length,
   })).sort((a, b) => b.count - a.count);
-
-  const reversedRegs = [...registrations].reverse();
-  const dateDataObj = reversedRegs.reduce((acc, reg) => {
-    const dateStr = new Date(reg.created_at).toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
-    if (!acc[dateStr]) {
-      acc[dateStr] = 0;
-    }
-    acc[dateStr] += 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const timeSeriesData = Object.keys(dateDataObj).map(date => ({
-    date,
-    count: dateDataObj[date]
-  }));
 
   const bgDataObj = registrations.reduce((acc, reg) => {
     const bg = reg.blood_group || 'অজানা';
@@ -188,32 +173,6 @@ export default function Talika() {
           animate="show"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-            <motion.div variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300 lg:col-span-2">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-lg">
-                  <TrendingUp size={24} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 tracking-tight">রেজিস্ট্রেশন প্রবণতা</h3>
-              </div>
-              <div className="h-[320px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={timeSeriesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
-                    <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#8b5cf6', strokeWidth: 1, strokeDasharray: '3 3' }} />
-                    <Area type="monotone" dataKey="count" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorCount)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </motion.div>
-
             <motion.div variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300">
               <div className="flex items-center gap-3 mb-8">
                 <div className="bg-blue-50 text-blue-600 p-2.5 rounded-lg">
