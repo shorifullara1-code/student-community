@@ -13,6 +13,7 @@ import Home from './pages/public/Home';
 import GenericPage from './pages/public/GenericPage';
 import News from './pages/public/News';
 import Registration from './pages/public/Registration';
+import Talika from './pages/public/Talika';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -37,6 +38,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="contact" element={<GenericPage title="যোগাযোগ" />} />
             <Route path="gallery" element={<GenericPage title="গ্যালারি" />} />
             <Route path="register" element={<Registration />} />
+            <Route path="talika" element={<Talika />} />
           </Route>
 
           {/* Admin Panel Routes */}

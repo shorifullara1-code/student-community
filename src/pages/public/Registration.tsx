@@ -8,10 +8,44 @@ export default function Registration() {
     phone: '',
     email: '',
     institution: '',
+    otherInstitution: '',
     area: '',
     bloodGroup: 'A+',
   });
   const [loading, setLoading] = useState(false);
+
+  const institutionCategories = [
+    {
+      category: 'Savar & Ashulia Colleges',
+      list: [
+        'Savar Government College',
+        'Savar College — EIIN 108453',
+        'Savar Model College — EIIN 108451',
+        'Al Haj Abdul Mannan Degree College — EIIN 108449',
+        'College Of Finance & Management — EIIN 131047',
+        'Savar Cantonment Public School & College',
+        'Jahangirnagar University School & College',
+        'Savar Laboratory College',
+        'Savar City College',
+        'Legend College Savar',
+        'Savar Trust College'
+      ]
+    },
+    {
+      category: 'Universities (UGC Approved / Recognized)',
+      list: [
+        'Jahangirnagar University',
+        'Gono Bishwabidyalay',
+        'City University',
+        'Eastern University',
+        'Manarat International University',
+        'Daffodil International University',
+        'Asian University of Bangladesh',
+        'Army Institute of Business Administration',
+        'BRAC University Residential Campus'
+      ]
+    }
+  ];
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -26,13 +60,19 @@ export default function Registration() {
     setLoading(true);
     setErrorMsg('');
     try {
+      const finalInstitution = formData.institution === 'other' ? formData.otherInstitution : formData.institution;
+      
+      if (!finalInstitution) {
+        throw new Error('অনুগ্রহ করে আপনার শিক্ষা প্রতিষ্ঠান নির্বাচন করুন বা লিখুন।');
+      }
+
       const { error } = await supabase
         .from('registrations')
         .insert([{
           name: formData.name,
           phone: formData.phone,
           email: formData.email,
-          institution: formData.institution,
+          institution: finalInstitution,
           area: formData.area,
           blood_group: formData.bloodGroup,
         }]);
@@ -47,6 +87,7 @@ export default function Registration() {
         phone: '',
         email: '',
         institution: '',
+        otherInstitution: '',
         area: '',
         bloodGroup: 'A+',
       });
@@ -171,22 +212,49 @@ export default function Registration() {
           </div>
         </div>
 
-        <div>
-           <label className="block text-sm font-semibold text-gray-700 mb-1">শিক্ষা প্রতিষ্ঠান *</label>
-           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Building size={18} className="text-gray-400" />
+        <div className="space-y-4">
+           <div>
+             <label className="block text-sm font-semibold text-gray-700 mb-1">শিক্ষা প্রতিষ্ঠান *</label>
+             <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Building size={18} className="text-gray-400" />
+              </div>
+              <select 
+                name="institution"
+                required
+                value={formData.institution}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition appearance-none bg-white"
+              >
+                <option value="" disabled>আপনার শিক্ষা প্রতিষ্ঠান নির্বাচন করুন</option>
+                {institutionCategories.map((cat, idx) => (
+                  <optgroup key={idx} label={cat.category}>
+                    {cat.list.map(inst => (
+                      <option key={inst} value={inst}>{inst}</option>
+                    ))}
+                  </optgroup>
+                ))}
+                <optgroup label="Other">
+                  <option value="other">অন্যান্য (নিজে লিখুন)</option>
+                </optgroup>
+              </select>
             </div>
-            <input 
-              type="text" 
-              name="institution"
-              required
-              value={formData.institution}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              placeholder="আপনার স্কুল/কলেজ/বিশ্ববিদ্যালয়ের নাম"
-            />
           </div>
+          
+          {formData.institution === 'other' && (
+            <div className="ml-4 pl-4 border-l-2 border-blue-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">আপনার শিক্ষা প্রতিষ্ঠানের নাম লিখুন *</label>
+              <input 
+                type="text" 
+                name="otherInstitution"
+                required
+                value={formData.otherInstitution}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                placeholder="স্কুল/কলেজ/বিশ্ববিদ্যালয়ের নাম..."
+              />
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
