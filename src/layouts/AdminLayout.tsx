@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Settings, LogOut, LayoutDashboard, FileText, Users, Globe, Menu, Shield, Lock, User, UserPlus } from 'lucide-react';
+import { Settings, LogOut, LayoutDashboard, FileText, Users, Globe, Menu, Shield, Lock, User, UserPlus, Image } from 'lucide-react';
 
 export default function AdminLayout() {
   const location = useLocation();
@@ -37,6 +37,7 @@ export default function AdminLayout() {
     { name: 'খবর', path: '/admin/news', icon: <Globe size={20} /> },
     { name: 'নেতৃবৃন্দ', path: '/admin/leaders', icon: <Users size={20} /> },
     { name: 'রেজিস্ট্রেশনসমূহ', path: '/admin/registrations', icon: <UserPlus size={20} /> },
+    { name: 'ফটো গ্যালারি', path: '/admin/gallery', icon: <Image size={20} /> },
   ];
 
   if (!isLoggedIn) {
