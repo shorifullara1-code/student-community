@@ -61,7 +61,7 @@ export default function PublicLayout() {
 
   return (
     <div className="min-h-screen text-gray-800 pb-10">
-      <div className="max-w-[1000px] mx-auto bg-white min-h-screen shadow-2xl overflow-hidden relative flex flex-col">
+      <div className={`${location.pathname.startsWith('/talika') ? 'w-full' : 'max-w-[1000px] mx-auto'} bg-white min-h-screen shadow-2xl overflow-hidden relative flex flex-col`}>
         
         {/* Scroll to Top Button (Floating) */}
         <div className="fixed bottom-10 right-10 bg-white border border-gray-200 p-2 rounded-full shadow-lg cursor-pointer text-gray-500 hover:text-blue-600 xl:translate-x-32 hidden lg:flex">
