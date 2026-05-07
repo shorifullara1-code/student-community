@@ -110,10 +110,14 @@ export default function PublicLayout() {
           
           <div className="absolute inset-0 flex items-center px-4 md:px-8">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center mb-4 text-center sm:text-left w-full">
-              <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center p-1 shadow border-2 border-blue-500 shrink-0">
-                <div className="w-full h-full bg-[#1d4ed8] rounded-full flex items-center justify-center text-white text-2xl md:text-3xl font-bold border-2 border-red-500">
-                  <span className="font-tiro">{content.logoText}</span>
-                </div>
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center p-1 shadow border-2 border-blue-500 shrink-0 overflow-hidden">
+                {content.logoUrl ? (
+                  <img src={content.logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" />
+                ) : (
+                  <div className="w-full h-full bg-[#1d4ed8] rounded-full flex items-center justify-center text-white text-2xl md:text-3xl font-bold border-2 border-red-500">
+                    <span className="font-tiro">{content.logoText}</span>
+                  </div>
+                )}
               </div>
               <div className="text-white drop-shadow-md">
                 <h1 className="text-2xl md:text-4xl font-bold font-tiro tracking-wide mb-1 leading-tight">Savar Student Community</h1>

@@ -35,4 +35,5 @@ export interface SiteContent {
   leaders: Leader[];
   newsArticles?: NewsArticle[];
   heroImage?: string;
+  logoUrl?: string;
 }

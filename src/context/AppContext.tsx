@@ -53,7 +53,8 @@ const defaultContent: SiteContent = {
     }
   ],
   newsArticles: [],
-  heroImage: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+  heroImage: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+  logoUrl: ''
 };
 
 interface AppContextType {
