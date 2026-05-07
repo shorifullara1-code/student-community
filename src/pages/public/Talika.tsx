@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Building, Droplet, MapPin, AlertCircle, BarChart2 } from 'lucide-react';
+import { Users, Building, Droplet, MapPin, AlertCircle, BarChart2, PieChart as PieChartIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { motion } from 'framer-motion';
 
 interface RegistrationData {
   id: number;
@@ -12,7 +13,20 @@ interface RegistrationData {
   created_at: string;
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c'];
+const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#ec4899', '#14b8a6'];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function Talika() {
   const [registrations, setRegistrations] = useState<RegistrationData[]>([]);
@@ -59,26 +73,46 @@ export default function Talika() {
     count: groupedData[institution].length,
   })).sort((a, b) => b.count - a.count);
 
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-gray-900 border border-gray-800 text-white p-3 rounded-lg shadow-xl shadow-gray-900/50 backdrop-blur-sm bg-opacity-90">
+          <p className="font-bold text-sm mb-1">{payload[0].payload.name}</p>
+          <p className="text-blue-400 font-mono text-sm">সদস্য: <span className="text-white text-base font-bold">{payload[0].value}</span> জন</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 md:p-8 text-center">
-        <h2 className="text-3xl font-bold text-[#1d4ed8] flex items-center justify-center gap-2 mb-3">
-          <Users size={32} />
+    <div className="w-full space-y-8">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100/50 rounded-2xl shadow-sm p-8 text-center relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-8 opacity-5 transform translate-x-4 -translate-y-4">
+          <Users size={120} />
+        </div>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-blue-900 flex items-center justify-center gap-3 mb-4 tracking-tight drop-shadow-sm relative z-10">
+          <Users size={36} className="text-blue-600" />
           সদস্য তালিকা
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          সাভার স্টুডেন্ট কমিউনিটিতে এ পর্যন্ত যুক্ত হওয়া সব সদস্যদের তালিকা এবং প্রতিষ্ঠান অনুযায়ী পরিসংখ্যান।
+        <p className="text-blue-800/80 max-w-2xl mx-auto text-lg leading-relaxed relative z-10 font-medium">
+          সাভার স্টুডেন্ট কমিউনিটিতে এ পর্যন্ত যুক্ত হওয়া সব সদস্যদের তালিকা এবং প্রতিষ্ঠান অনুযায়ী বিস্তারিত পরিসংখ্যান।
         </p>
-      </div>
+      </motion.div>
 
       {errorMsg && (
-        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg flex flex-col gap-3">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-red-50 border border-red-200 text-red-700 p-5 rounded-xl flex flex-col gap-3 shadow-sm">
           <div className="flex items-start gap-3">
-            <AlertCircle className="shrink-0 mt-0.5" />
-            <p className="font-medium">{errorMsg}</p>
+            <AlertCircle className="shrink-0 mt-0.5 text-red-500" />
+            <p className="font-medium text-red-800">{errorMsg}</p>
           </div>
           {(errorMsg.includes('SQL') || errorMsg.includes('API')) && (
-             <div className="bg-white p-3 rounded border border-red-100 font-mono text-xs overflow-x-auto text-gray-800 ml-8">
+             <div className="bg-white p-4 rounded-lg border border-red-100 font-mono text-xs overflow-x-auto text-gray-800 ml-9 shadow-inner">
                <p className="mb-2 text-red-500 font-bold">// নিচের SQL টি Supabase এর SQL Editor এ রান করুন:</p>
                <code>
                  CREATE TABLE IF NOT EXISTS registrations ({'\n'}
@@ -99,107 +133,149 @@ export default function Talika() {
                </code>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
 
       {loading ? (
-        <div className="flex justify-center p-12">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        <div className="flex flex-col items-center justify-center p-16 gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-[3px] border-blue-100 border-t-blue-600 shadow-sm"></div>
+          <p className="text-gray-500 font-medium animate-pulse">ডেটা লোড হচ্ছে...</p>
         </div>
       ) : !errorMsg && registrations.length > 0 ? (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <BarChart2 className="text-blue-600" /> প্রতিষ্ঠান ভিত্তিক পরিসংখ্যান
-              </h3>
-              <div className="h-[300px] w-full">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <motion.div variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="bg-blue-50 text-blue-600 p-2.5 rounded-lg">
+                  <BarChart2 size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 tracking-tight">প্রতিষ্ঠান ভিত্তিক পরিসংখ্যান</h3>
+              </div>
+              <div className="h-[320px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" width={150} tick={{ fontSize: 12 }} />
-                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px' }} />
-                    <Bar dataKey="count" fill="#3b82f6" name="সদস্য সংখ্যা" radius={[0, 4, 4, 0]}>
+                  <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorBar" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#60a5fa" />
+                        <stop offset="100%" stopColor="#3b82f6" />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" verticalCoordinatesGenerator={(props) => [props.width / 4, props.width / 2, props.width * 0.75]} />
+                    <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                    <YAxis dataKey="name" type="category" width={140} axisLine={false} tickLine={false} tick={{ fill: '#374151', fontSize: 12, fontWeight: 500 }} />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f3f4f6', opacity: 0.6 }} />
+                    <Bar dataKey="count" fill="url(#colorBar)" radius={[0, 6, 6, 0]} barSize={24}>
                       {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} fillOpacity={0.9} />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-            </div>
+            </motion.div>
 
-             <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <PieChart className="text-blue-600" /> প্রতিষ্ঠানের অনুপাত
-              </h3>
-               <div className="h-[300px] w-full flex items-center justify-center">
-                 <ResponsiveContainer width="100%" height="100%">
+            <motion.div variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-lg">
+                  <PieChartIcon size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 tracking-tight">প্রতিষ্ঠানের অনুপাত</h3>
+              </div>
+              <div className="h-[320px] w-full flex items-center justify-center relative">
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={chartData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      paddingAngle={5}
+                      innerRadius={80}
+                      outerRadius={120}
+                      paddingAngle={4}
                       dataKey="count"
-                      label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                      stroke="none"
+                      labelLine={false}
                     >
                       {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="hover:opacity-80 transition-opacity duration-300" />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ borderRadius: '8px' }} />
+                    <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
-               </div>
-            </div>
+                {/* Center text for Donut */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                   <Users size={32} className="text-gray-400 mb-1" />
+                   <span className="text-2xl font-bold text-gray-800">{registrations.length}</span>
+                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">মোট সদস্য</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
 
-          <div className="space-y-6">
-            {chartData.map((stat) => (
-              <div key={stat.name} className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                <div className="bg-[#f8fafc] border-b border-gray-200 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                  <h3 className="text-lg font-bold text-[#1e293b] flex items-center gap-2">
-                    <Building className="text-blue-600" size={20} />
+          <div className="space-y-8">
+            {chartData.map((stat, idx) => (
+              <motion.div 
+                key={stat.name} 
+                variants={itemVariants}
+                className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden"
+              >
+                <div className="bg-gradient-to-r from-[#f8fafc] to-white border-b border-gray-100 p-5 md:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3">
+                    <div className="bg-blue-50 text-blue-600 p-2 rounded-lg shrink-0">
+                      <Building size={20} />
+                    </div>
                     {stat.name}
                   </h3>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
-                    মোট সদস্য: {stat.count} জন
-                  </span>
+                  <div className="bg-white border border-blue-100 text-blue-700 text-sm font-bold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    সদস্য: <span className="text-lg">{stat.count}</span>
+                  </div>
                 </div>
                 
-                <div className="p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {groupedData[stat.name].map(member => (
-                      <div key={member.id} className="border border-gray-100 rounded bg-gray-50 p-4 flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg shrink-0">
+                <div className="p-5 md:p-6 bg-[#fafafa]/50">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 text-left">
+                    {groupedData[stat.name].map((member, mIdx) => (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 0.3, delay: mIdx * 0.05 }}
+                        key={member.id} 
+                        className="group bg-white border border-gray-200 hover:border-blue-300 rounded-xl p-4 flex items-start gap-4 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden"
+                      >
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-[100px] -z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700 flex items-center justify-center font-bold text-xl shrink-0 shadow-inner z-10 border border-blue-50">
                           {member.name.charAt(0).toUpperCase()}
                         </div>
-                        <div>
-                          <p className="font-bold text-gray-800">{member.name}</p>
-                          <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-                            <MapPin size={12} /> {member.area}
+                        <div className="flex-1 min-w-0 z-10 pt-1">
+                          <p className="font-bold text-gray-900 truncate text-base mb-1 group-hover:text-blue-700 transition-colors">{member.name}</p>
+                          <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1.5">
+                            <MapPin size={12} className="text-gray-400 shrink-0" /> 
+                            <span className="truncate">{member.area}</span>
                           </div>
-                           <div className="flex items-center gap-1 text-xs mt-1 font-mono text-red-600 bg-red-50 px-1.5 py-0.5 rounded inline-flex">
-                            <Droplet size={12} /> {member.blood_group}
+                           <div className="inline-flex items-center gap-1.5 text-[11px] font-mono text-red-600 bg-red-50/80 border border-red-100 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">
+                            <Droplet size={11} className="text-red-500" /> {member.blood_group}
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </>
+        </motion.div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-12 text-center text-gray-500">
-          এখনো কোনো সদস্য রেজিস্ট্রেশন করেননি।
-        </div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-50 border border-gray-200 border-dashed rounded-2xl p-16 text-center">
+          <div className="w-20 h-20 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
+             <Users size={32} />
+          </div>
+          <p className="text-gray-500 font-medium text-lg">এখনো কোনো সদস্য রেজিস্ট্রেশন করেননি।</p>
+        </motion.div>
       )}
     </div>
   );
