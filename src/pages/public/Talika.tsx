@@ -172,6 +172,29 @@ export default function Talika() {
           initial="hidden"
           animate="show"
         >
+          {/* Top Summary Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-10">
+            <motion.div variants={itemVariants} className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl p-5 shadow-lg shadow-blue-900/20 relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-1 right-1 opacity-20 transform translate-x-2 -translate-y-2">
+                <Users size={80} />
+              </div>
+              <p className="text-blue-100 font-medium mb-1 relative z-10 text-sm md:text-base">মোট সদস্য</p>
+              <h3 className="text-4xl font-extrabold relative z-10">{registrations.length}</h3>
+            </motion.div>
+            
+            {chartData.map((stat, idx) => (
+              <motion.div key={`topcard-${idx}`} variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between group hover:border-blue-200">
+                 <p className="text-gray-500 text-xs md:text-sm font-medium mb-4 line-clamp-2 group-hover:text-blue-700 transition-colors" title={stat.name}>{stat.name}</p>
+                 <div className="flex items-end justify-between mt-auto">
+                   <h3 className="text-3xl font-extrabold text-gray-800 group-hover:text-blue-800 transition-colors">{stat.count}</h3>
+                   <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-blue-50 transition-colors">
+                     <Building size={20} className="text-gray-300 group-hover:text-blue-400 transition-colors" />
+                   </div>
+                 </div>
+              </motion.div>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
             <motion.div variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300">
               <div className="flex items-center gap-3 mb-8">
