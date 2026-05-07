@@ -88,6 +88,30 @@ export default function Talika() {
     count: dateDataObj[date]
   }));
 
+  const bgDataObj = registrations.reduce((acc, reg) => {
+    const bg = reg.blood_group || 'অজানা';
+    if (!acc[bg]) acc[bg] = 0;
+    acc[bg] += 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const bloodGroupData = Object.keys(bgDataObj).map(name => ({
+    name,
+    count: bgDataObj[name]
+  })).sort((a, b) => b.count - a.count);
+
+  const areaDataObj = registrations.reduce((acc, reg) => {
+    const area = reg.area || 'অজানা';
+    if (!acc[area]) acc[area] = 0;
+    acc[area] += 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const areaData = Object.keys(areaDataObj).map(name => ({
+    name,
+    count: areaDataObj[name]
+  })).sort((a, b) => b.count - a.count).slice(0, 7); // top 7 areas
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
@@ -253,6 +277,83 @@ export default function Talika() {
                    <Users size={32} className="text-gray-400 mb-1" />
                    <span className="text-2xl font-bold text-gray-800">{registrations.length}</span>
                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">মোট সদস্য</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <motion.div variants={itemVariants} className="bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="bg-emerald-50 text-emerald-600 p-2.5 rounded-lg">
+                  <MapPin size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 tracking-tight">এলাকা ভিত্তিক সদস্য</h3>
+              </div>
+              <div className="h-[320px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={areaData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                    <defs>
+                      <linearGradient id="colorArea" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#10b981" />
+                        <stop offset="100%" stopColor="#059669" />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} angle={-45} textAnchor="end" height={60} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f3f4f6', opacity: 0.6 }} />
+                    <Bar dataKey="count" fill="url(#colorArea)" radius={[6, 6, 0, 0]} barSize={32} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="bg-white border border-rose-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300 relative overflow-hidden">
+              <div className="absolute -right-6 -top-6 text-rose-50 opacity-30 pointer-events-none">
+                <Droplet size={150} fill="currentColor" />
+              </div>
+              <div className="flex items-center gap-3 mb-8 relative z-10">
+                <div className="bg-rose-50 text-rose-600 p-2.5 rounded-lg">
+                  <Droplet size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 tracking-tight">রক্তের গ্রুপ</h3>
+              </div>
+              <div className="h-[320px] w-full relative z-10 flex items-center justify-center">
+                <div className="w-full h-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={bloodGroupData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={110}
+                        paddingAngle={5}
+                        dataKey="count"
+                        stroke="none"
+                        labelLine={false}
+                        label={({ cx, cy, midAngle, innerRadius, outerRadius, value, name }) => {
+                          const RADIAN = Math.PI / 180;
+                          const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                          const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                          const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                          return (
+                            <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
+                              {name}
+                            </text>
+                          );
+                        }}
+                      >
+                        {bloodGroupData.map((entry, index) => {
+                           // Try to make blood group reddish/pink colors
+                           const bgColors = ['#e11d48', '#be123c', '#f43f5e', '#fb7185', '#9f1239', '#fda4af', '#fca5a5', '#ef4444'];
+                           return <Cell key={`cell-${index}`} fill={bgColors[index % bgColors.length]} className="hover:opacity-80 transition-opacity duration-300" />;
+                        })}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </motion.div>
