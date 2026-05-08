@@ -11,6 +11,25 @@ export default function PublicLayout() {
   const [visitorCount, setVisitorCount] = useState<number>(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const [currentLang, setCurrentLang] = useState('bn');
+
+  const toggleLanguage = () => {
+    try {
+      const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+      if (select) {
+        const nextLang = currentLang === 'bn' ? 'en' : 'bn';
+        select.value = nextLang;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        setCurrentLang(nextLang);
+      } else {
+        // Fallback or retry logic if widget not ready
+        console.warn('Google Translate widget not found.');
+      }
+    } catch (err) {
+      console.error('Translation error:', err);
+    }
+  };
+
   useEffect(() => {
     const trackVisitor = async () => {
       // Fetch current count from Supabase
@@ -91,8 +110,12 @@ export default function PublicLayout() {
               <Search size={16} className="absolute right-3 sm:right-2 top-2 sm:top-1.5 text-gray-500" />
             </div>
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-1 font-semibold hover:text-gray-200">
-                <Globe size={16} /> English
+              <button 
+                onClick={toggleLanguage}
+                className="flex items-center gap-1 font-semibold hover:text-gray-200 transition-colors"
+                title={currentLang === 'bn' ? "Switch to English" : "বাংলায় পরিবর্তন করুন"}
+              >
+                <Globe size={16} /> {currentLang === 'bn' ? 'English' : 'বাংলা'}
               </button>
               <Link to="/admin" className="flex items-center gap-1 bg-[#2563eb] px-3 py-1 rounded text-white shadow-sm hover:bg-blue-600 font-medium text-xs sm:text-sm">
                 <User size={14} /> এডমিন
