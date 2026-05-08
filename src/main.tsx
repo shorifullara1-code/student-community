@@ -11,6 +11,7 @@ import AdminLayout from './layouts/AdminLayout';
 // Public Pages
 import Home from './pages/public/Home';
 import GenericPage from './pages/public/GenericPage';
+import Contact from './pages/public/Contact';
 import News from './pages/public/News';
 import Registration from './pages/public/Registration';
 import Talika from './pages/public/Talika';
@@ -37,7 +38,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="news" element={<News />} />
             <Route path="committees" element={<GenericPage title="কমিটি সমূহ" />} />
             <Route path="projects" element={<GenericPage title="প্রকল্পসমূহ" />} />
-            <Route path="contact" element={<GenericPage title="যোগাযোগ" />} />
+            <Route path="contact" element={<Contact />} />
             <Route path="gallery" element={<Gallery />} />
             <Route path="register" element={<Registration />} />
             <Route path="talika" element={<Talika />} />
