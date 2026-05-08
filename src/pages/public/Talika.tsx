@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 interface RegistrationData {
   id: number;
   name: string;
+  age: number | null;
   institution: string;
   area: string;
   blood_group: string;
@@ -39,7 +40,7 @@ export default function Talika() {
     try {
       const { data, error } = await supabase
         .from('registrations')
-        .select('id, name, institution, area, blood_group, created_at')
+        .select('id, name, institution, age, area, blood_group, created_at')
         .order('institution', { ascending: true })
         .order('created_at', { ascending: false });
 
@@ -145,6 +146,7 @@ export default function Talika() {
                  {'  '}name TEXT NOT NULL,{'\n'}
                  {'  '}phone TEXT NOT NULL,{'\n'}
                  {'  '}email TEXT,{'\n'}
+                 {'  '}age INTEGER,{'\n'}
                  {'  '}institution TEXT NOT NULL,{'\n'}
                  {'  '}area TEXT NOT NULL,{'\n'}
                  {'  '}blood_group TEXT,{'\n'}
@@ -377,7 +379,10 @@ export default function Talika() {
                           {member.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0 z-10 pt-1">
-                          <p className="font-bold text-gray-900 truncate text-base mb-1 group-hover:text-blue-700 transition-colors">{member.name}</p>
+                          <p className="font-bold text-gray-900 truncate text-base mb-1 group-hover:text-blue-700 transition-colors">
+                            {member.name}
+                            {member.age ? <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-100/80 border border-gray-200 px-1.5 py-0.5 rounded inline-block">বয়স: {member.age}</span> : null}
+                          </p>
                           <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1.5">
                             <MapPin size={12} className="text-gray-400 shrink-0" /> 
                             <span className="truncate">{member.area}</span>

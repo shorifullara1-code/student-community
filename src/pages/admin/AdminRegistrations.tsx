@@ -8,6 +8,7 @@ interface RegistrationData {
   name: string;
   phone: string;
   email: string | null;
+  age: number | null;
   institution: string;
   area: string;
   blood_group: string;
@@ -123,6 +124,7 @@ export default function AdminRegistrations() {
                       {'  '}name TEXT NOT NULL,{'\n'}
                       {'  '}phone TEXT NOT NULL,{'\n'}
                       {'  '}email TEXT,{'\n'}
+                      {'  '}age INTEGER,{'\n'}
                       {'  '}institution TEXT NOT NULL,{'\n'}
                       {'  '}area TEXT NOT NULL,{'\n'}
                       {'  '}blood_group TEXT,{'\n'}
@@ -220,7 +222,10 @@ export default function AdminRegistrations() {
                    filteredData.map((reg) => (
                      <tr key={reg.id} className="hover:bg-gray-50 transition">
                        <td className="px-4 py-3">
-                         <div className="font-bold text-gray-800 text-base">{reg.name}</div>
+                         <div className="font-bold text-gray-800 text-base">
+                           {reg.name}
+                           {reg.age ? <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">বয়স: {reg.age}</span> : null}
+                         </div>
                          <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
                            <Phone size={12} /> {reg.phone}
                          </div>
