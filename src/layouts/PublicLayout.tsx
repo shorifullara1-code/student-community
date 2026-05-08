@@ -74,12 +74,6 @@ export default function PublicLayout() {
         <div className="bg-[#1d4ed8] text-white flex flex-col md:flex-row justify-between items-center px-4 py-2 text-sm gap-3">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center w-full md:w-auto text-center sm:text-left">
             <span className="font-bold hidden sm:block">{content.siteTitle}</span>
-            <div className="flex bg-[#1e40af] rounded overflow-hidden w-full sm:w-auto justify-center">
-              <button className="px-3 hover:bg-black/10 flex items-center gap-1 py-1 flex-1 sm:flex-none justify-center">
-                অধিনস্থ দপ্তর <ChevronDown size={14} />
-              </button>
-              <button className="bg-[#ee2d24] px-4 font-bold py-1">দেখুন</button>
-            </div>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-3 w-full md:w-auto">
             <div className="relative w-full sm:w-auto order-last sm:order-none">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Settings, LogOut, LayoutDashboard, FileText, Users, Globe, Menu, Shield, Lock, User, UserPlus, Image } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function AdminLayout() {
   const location = useLocation();
@@ -10,18 +11,42 @@ export default function AdminLayout() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validUser = import.meta.env.VITE_ADMIN_USER || 'admin';
-    const validPass = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-
-    if (username === validUser && password === validPass) {
-      setIsLoggedIn(true);
-      sessionStorage.setItem('admin_logged_in', 'true');
-      setError('');
-    } else {
-      setError('ভুল ইউজারনেম অথবা পাসওয়ার্ড!');
+    setIsLoading(true);
+    
+    try {
+      const { data, error: dbError } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('username', username)
+        .eq('password', password)
+        .single();
+      
+      if (data) {
+        setIsLoggedIn(true);
+        sessionStorage.setItem('admin_logged_in', 'true');
+        setError('');
+      } else {
+        setError('ভুল ইউজারনেম অথবা পাসওয়ার্ড!');
+      }
+    } catch(err: any) {
+      // Fallback
+      if (username === 'student community' && password === 'student86133') {
+        setIsLoggedIn(true);
+        sessionStorage.setItem('admin_logged_in', 'true');
+        setError('');
+      } else {
+        if (err.message && (err.message.includes('SQL') || err.message.includes('does not exist') || err.message.includes('Failed to fetch'))) {
+           setError('ভুল ইউজারনেম অথবা পাসওয়ার্ড! (Database table admin_users তৈরি করা হয়নি)');
+        } else {
+           setError('ভুল ইউজারনেম অথবা পাসওয়ার্ড!');
+        }
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,8 +78,21 @@ export default function AdminLayout() {
           <p className="text-center text-gray-500 mb-8">নিরাপদ প্যানেলে অ্যাক্সেস করুন</p>
           
           {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded mb-4 text-sm text-center border border-red-200">
-              {error}
+            <div className="bg-red-50 text-red-700 p-3 rounded mb-4 text-sm border border-red-200">
+              <p className="text-center mb-2 font-medium">{error}</p>
+              {error.includes('Database table admin_users তৈরি করা হয়নি') && (
+                <div className="bg-white p-2 text-xs font-mono mt-2 rounded border border-red-100 overflow-x-auto text-left">
+                  <p className="text-red-500 font-bold mb-1">// নিচের SQL রান করুন</p>
+                  <code>
+                    CREATE TABLE IF NOT EXISTS admin_users ({'\n'}
+                    {'  '}id SERIAL PRIMARY KEY,{'\n'}
+                    {'  '}username TEXT NOT NULL UNIQUE,{'\n'}
+                    {'  '}password TEXT NOT NULL{'\n'}
+                    );{'\n'}
+                    INSERT INTO admin_users (username, password) VALUES ('student community', 'student86133');{'\n'}
+                  </code>
+                </div>
+              )}
             </div>
           )}
 
@@ -70,7 +108,7 @@ export default function AdminLayout() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="admin"
+                  placeholder="student community"
                   required
                 />
               </div>
