@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Search, Globe, Home, ChevronDown, ArrowUp, User, Users, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../lib/supabase';
 
@@ -179,57 +180,69 @@ export default function PublicLayout() {
         </nav>
 
         {/* Mobile Sidebar Overlay */}
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 flex">
-            {/* Overlay background */}
-            <div 
-              className="fixed inset-0 bg-black/50 transition-opacity" 
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            
-            {/* Sidebar content */}
-            <div className="relative flex flex-col w-64 max-w-sm bg-white shadow-xl animate-in slide-in-from-left duration-300">
-              <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-[#2563eb] text-white">
-                <span className="font-bold text-lg font-tiro">সাভার স্টুডেন্ট কমিউনিটি</span>
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  className="p-1 hover:bg-white/20 rounded-full transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-              <div className="flex-1 overflow-y-auto px-2 py-4 flex flex-col gap-1">
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  <Home size={18} /> হোম
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/news" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/news') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  খবর
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/about" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/about') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  আমাদের সম্পর্কিত
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/committees" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/committees') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  কমিটি সমূহ
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/projects" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/projects') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  প্রকল্পসমূহ
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/contact" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/contact') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  যোগাযোগ
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/gallery" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/gallery') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  গ্যালারি
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/register" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/register') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  রেজিস্ট্রেশন
-                </Link>
-                <Link onClick={() => setIsMobileMenuOpen(false)} to="/talika" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/talika') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
-                  তালিকা
-                </Link>
-              </div>
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <div className="fixed inset-0 z-50 flex">
+              {/* Overlay background */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 bg-black/50" 
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              
+              {/* Sidebar content */}
+              <motion.div 
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="relative flex flex-col w-64 max-w-sm bg-white shadow-xl h-full"
+              >
+                <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-[#2563eb] text-white">
+                  <span className="font-bold text-lg font-tiro">সাভার স্টুডেন্ট কমিউনিটি</span>
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="p-1 hover:bg-white/20 rounded-full transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+                <div className="flex-1 overflow-y-auto px-2 py-4 flex flex-col gap-1">
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    <Home size={18} /> হোম
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/news" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/news') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    খবর
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/about" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/about') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    আমাদের সম্পর্কিত
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/committees" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/committees') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    কমিটি সমূহ
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/projects" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/projects') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    প্রকল্পসমূহ
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/contact" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/contact') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    যোগাযোগ
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/gallery" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/gallery') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    গ্যালারি
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/register" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/register') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    রেজিস্ট্রেশন
+                  </Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} to="/talika" className={`px-4 py-3 rounded-lg flex items-center gap-3 font-medium transition ${isActive('/talika') === 'bg-[#1d4ed8]' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                    তালিকা
+                  </Link>
+                </div>
+              </motion.div>
             </div>
-          </div>
-        )}
+          )}
+        </AnimatePresence>
 
         {/* --- News Ticker --- */}
         <div className="border-b border-gray-200 bg-[#fcfcfc] flex items-center overflow-hidden shrink-0 shadow-sm relative z-0 text-sm md:text-base">
